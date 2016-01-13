@@ -11,7 +11,7 @@ def open_and_read_file(file_path, current_text=None):
     the file's contents as one string of text.
     """
     text_file = open(file_path)
-    text = text_file.read().replace('\n', ' ').rstrip()
+    text = text_file.read().replace('\n', ' ').strip()
     if current_text:
         text = ' '.join((current_text, text))
     text_file.close()
@@ -47,6 +47,8 @@ def make_chains(text_string, gram_len):
 
 
     for word in text_list[gram_len:]:
+        if word == '':
+            continue
         if chains.has_key(gram):
             chains[gram].append(word)
         else:
@@ -70,7 +72,7 @@ def make_text(chains):
         # if not text[-1].isalpha() and not text[-1].isdigit():
         #     break
         if text[-1] in '!.?':
-            if len(text) <= 140:
+            if len(text) <= (140 - 13): #added hashtag
                 return text
             else:
                 break
@@ -91,9 +93,11 @@ def tweet(chains):
         consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
         access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
         access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
-    print api.VerifyCredentials()
+    user_creds = api.VerifyCredentials()
+    statuses = api.GetUserTimeline(screen_name=user_creds.screen_name)
+    print statuses[0].text #statuses[0].coordinates
 
-    status = api.PostUpdate(make_text(chains))
+    status = api.PostUpdate(make_text(chains) + ' #Hack13right')
 
 
 # print make_text(make_chains(open_and_read_file('gettysburg.txt')))
@@ -102,7 +106,7 @@ input_path2 = sys.argv[2]
 
 try:
     n = int(sys.argv[3])
-     # Open the file and turn it into one long string
+    # Open the file and turn it into one long string
     input_text = open_and_read_file(input_path)
     input_text = open_and_read_file(input_path2, current_text=input_text)
 
