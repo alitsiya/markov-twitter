@@ -2,6 +2,7 @@ import os
 import sys
 from random import choice
 import twitter
+import httplib
 
 
 def open_and_read_file(file_path, current_text=None):
@@ -99,6 +100,14 @@ def tweet(chains):
 
     status = api.PostUpdate(make_text(chains) + ' #Hack13right', latitude=37.7886334,
                             longitude=-122.4136639)
+
+    # bowie_statuses = api.GetUserTimeline(screen_name='little_bowiebot')
+    # random_status = choice(bowie_statuses)
+    # print random_status.text, random_status.id
+    # status = api.PostUpdate(make_text(chains) + ' #Hack13right', latitude=37.7886334,
+    #                         longitude=-122.4136639, in_reply_to_status_id=random_status.id)
+    # print "test:", status
+
 
 
 # print make_text(make_chains(open_and_read_file('gettysburg.txt')))
